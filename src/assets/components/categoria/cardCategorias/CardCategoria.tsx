@@ -1,9 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Categoria from '../../../models/Categoria'
+import Categoria from '../../../../models/Categoria'
+
 
 interface CardCategoriaProps {
   categoria: Categoria
+  onDelete: () => void;
 }
 
 function CardCategoria({categoria}: CardCategoriaProps) {

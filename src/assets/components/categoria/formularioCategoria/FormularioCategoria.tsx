@@ -4,12 +4,18 @@ import Categoria from '../../../../models/Categoria';
 import { atualizar, buscar, cadastrar } from '../../../../services/Service';
 
 function FormularioCategoria() {
-  const [categoria, setCategoria] = useState<Categoria>({ descricao: '' });
+  const [categoria, setCategoria] = useState<Categoria>({ id: 0, nome: '', descricao: '' });
+  const [mensagem, setMensagem] = useState<string | null>(null);
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  async function buscarPorId(id: string) {
-    await buscar(`/categorias/${id}`, setCategoria);
+  async function buscarPorId(categoriaId: string) {
+    try {
+      const categoriaEncontrada = await buscar(`/categorias/${categoriaId}`);
+      setCategoria(categoriaEncontrada);
+    } catch (error: any) {
+      console.error('Erro ao buscar categoria por ID:', error);
+    }
   }
 
   useEffect(() => {
@@ -25,21 +31,22 @@ function FormularioCategoria() {
     }));
   }
 
-  async function gerarNovaCategoria(e: ChangeEvent<HTMLFormElement>) {
+  async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
       if (id !== undefined) {
-        await atualizar(`/categorias`, categoria, setCategoria);
-        alert('Categoria atualizada com sucesso');
+        await atualizar(`/categorias`, categoria);
+        setMensagem('Categoria atualizada com sucesso');
       } else {
-        await cadastrar(`/categorias`, categoria, setCategoria);
-        alert('Categoria cadastrada com sucesso');
+        await cadastrar(`/categorias`, categoria);
+        setMensagem('Categoria cadastrada com sucesso');
       }
 
       retornar();
     } catch (error: any) {
-      alert(`Erro ao processar a requisição: ${error.message}`);
+      console.error('Erro ao processar a requisição:', error);
+      setMensagem(`Erro ao processar a requisição: ${error.message}`);
     }
   }
 
@@ -53,7 +60,24 @@ function FormularioCategoria() {
         {id === undefined ? 'Cadastre uma nova categoria' : 'Editar categoria'}
       </h1>
 
-      <form className="w-1/2 flex flex-col gap-4" onSubmit={gerarNovaCategoria}>
+      {mensagem && (
+        <div className={`text-center ${mensagem.includes('Erro') ? 'text-red-500' : 'text-green-500'}`}>
+          {mensagem}
+        </div>
+      )}
+
+      <form className="w-1/2 flex flex-col gap-4" onSubmit={handleFormSubmit}>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="nome">Nome da categoria</label>
+          <input
+            type="text"
+            placeholder="Nome"
+            name='nome'
+            className="border-2 border-slate-700 rounded p-2"
+            value={categoria.nome}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
+          />
+        </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="descricao">Descrição da categoria</label>
           <input
