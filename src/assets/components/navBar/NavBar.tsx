@@ -1,23 +1,27 @@
-// Navbar.tsx
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
-const Navbar: React.FC = () => {
+
+
+
+function Navbar() {
+
+  
+
   return (
-    <nav className="bg-gray-800 p-4 text-white">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-lg font-bold">
-           Farmácia
-        </Link>
-        <div>
-          <Link to="/produtos" className="mx-4">
-            Produtos
-          </Link>
-          
+    <>
+     <div className='w-full bg-green-200 text-black flex justify-center py-4'>
+          <div className="container flex justify-between text-lg">
+          <Link to='/home' className='text-2xl font-bold uppercase'>Farmacia</Link>
+            <div className='flex gap-4'>
+            <div className='hover:underline'>Produtos</div>
+            <Link to='/categorias' className='hover:underline'>Categorias</Link>
+            <Link to='/cadastroCategoria' className='hover:underline'>Cadastrar categoria</Link>
+            </div>
+          </div>
         </div>
-      </div>
-    </nav>
-  );
-};
+    </>
+  )
+}
 
-export default Navbar;
+export default Navbar
