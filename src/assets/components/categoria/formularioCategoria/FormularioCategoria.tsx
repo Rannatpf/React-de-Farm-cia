@@ -1,53 +1,46 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
+import Categoria from '../../../../models/Categoria';
+import { atualizar, buscar, cadastrar } from '../../../../services/Service';
 
 function FormularioCategoria() {
   const [categoria, setCategoria] = useState<Categoria>({ descricao: '' });
-
-  let navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   async function buscarPorId(id: string) {
-    try {
-      const categoriaData = await buscar(`/categorias/${id}`);
-      setCategoria(categoriaData);
-    } catch (error) {
-      handleErroApi(error);
-    }
+    await buscar(`/categorias/${id}`, setCategoria);
   }
 
   useEffect(() => {
-    if (id) {
+    if (id !== undefined) {
       buscarPorId(id);
     }
   }, [id]);
 
   function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
-    setCategoria({
-      ...categoria,
+    setCategoria((prevCategoria) => ({
+      ...prevCategoria,
       [e.target.name]: e.target.value,
-    });
-
-    console.log(JSON.stringify(categoria));
+    }));
   }
 
   async function gerarNovaCategoria(e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
-      const funcaoServico = id ? atualizar : cadastrar;
-      await funcaoServico(`/categorias`, categoria);
+      if (id !== undefined) {
+        await atualizar(`/categorias`, categoria, setCategoria);
+        alert('Categoria atualizada com sucesso');
+      } else {
+        await cadastrar(`/categorias`, categoria, setCategoria);
+        alert('Categoria cadastrada com sucesso');
+      }
 
-      alert(id ? 'Categoria atualizada com sucesso' : 'Categoria cadastrada com sucesso');
       retornar();
-    } catch (error) {
-      handleErroApi(error);
+    } catch (error: any) {
+      alert(`Erro ao processar a requisição: ${error.message}`);
     }
-  }
-
-  function handleErroApi(error: any) {
-    alert('Erro ao processar a requisição');
   }
 
   function retornar() {
