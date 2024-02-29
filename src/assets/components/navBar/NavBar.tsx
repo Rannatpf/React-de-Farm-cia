@@ -10,7 +10,7 @@ function Navbar() {
 
   return (
     <>
-     <div className='w-full bg-green-200 text-black flex justify-center py-4'>
+     <div className='w-full bg-teal-600 text-black flex justify-center py-4'>
           <div className="container flex justify-between text-lg">
           <Link to='/home' className='text-2xl font-bold uppercase'>Farmacia</Link>
             <div className='flex gap-4'>

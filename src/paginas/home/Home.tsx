@@ -13,7 +13,7 @@ function Home() {
           <p className="text-xl text-black">Cuidando da sua saúde e bem-estar.</p>
           <div className="flex justify-around gap-4">
             <Link to="/produtos">
-              <button className="border rounded px-5 text-black bg-green-700 hover:bg-gray-300">
+              <button className="border rounded px-5 text-black bg-teal-800 hover:bg-gray-300">
                 Ver Produtos
               </button>
             </Link>
